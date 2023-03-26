@@ -20,7 +20,7 @@ namespace ArenaInABottle.Content.UI_Elements
         private Texture2D _itemSlotBottom = ModContent.Request<Texture2D>("ArenaInABottle/Content/Images/ItemSlotBottom", AssetRequestMode.ImmediateLoad).Value;
         private Texture2D _itemSlotTop = ModContent.Request<Texture2D>("ArenaInABottle/Content/Images/ItemSlotTop", AssetRequestMode.ImmediateLoad).Value;
         private Texture2D _galaxyTex = ModContent.Request<Texture2D>("ArenaInABottle/Content/Images/GalaxyBackground", AssetRequestMode.ImmediateLoad).Value;
-        private readonly Texture2D PerlinTexture = ModContent.Request<Texture2D>("ArenaInABottle/Content/Images/Shader/PerlinNoise", AssetRequestMode.ImmediateLoad).Value;
+        private readonly Texture2D _perlinTexture = ModContent.Request<Texture2D>("ArenaInABottle/Content/Images/Shader/PerlinNoise", AssetRequestMode.ImmediateLoad).Value;
         private static ArenaPlayer ArenaPlayer => Main.LocalPlayer.GetModPlayer<ArenaPlayer>();
         private Rectangle _size, _size2;
 
@@ -110,7 +110,7 @@ namespace ArenaInABottle.Content.UI_Elements
         {
             spriteBatch.End();
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, DepthStencilState.None, Main.graphics.GraphicsDevice.RasterizerState, null, Main.UIScaleMatrix);
-            GameShaders.Misc["PerlinNoise"].Shader.Parameters["sampleTexture"].SetValue(PerlinTexture); //TODO I doubt I need to set these every frame but crashing otherwise
+            GameShaders.Misc["PerlinNoise"].Shader.Parameters["sampleTexture"].SetValue(_perlinTexture); //TODO I doubt I need to set these every frame but crashing otherwise
             GameShaders.Misc["PerlinNoise"].Shader.Parameters["noiseScalar"].SetValue(2.5f);
             GameShaders.Misc["PerlinNoise"].Shader.Parameters["screenSize"].SetValue(_screenSize); // higher = more compact tex on both x and y
             GameShaders.Misc["PerlinNoise"].Apply();

@@ -9,7 +9,7 @@ namespace ArenaInABottle;
 
 public class ArenaModSystem : ModSystem
 {
-    private UserInterface BuilderInterface;
+    private UserInterface _builderInterface;
     private BuilderUi _builderUi;
     public static ArenaModSystem Instance => ModContent.GetInstance<ArenaModSystem>();
     private GameTime _lastGameTime;
@@ -19,7 +19,7 @@ public class ArenaModSystem : ModSystem
     {
         if (!Main.dedServ)
         {
-            BuilderInterface = new UserInterface();
+            _builderInterface = new UserInterface();
 
             _builderUi = new BuilderUi();
             _builderUi.Activate();
@@ -29,12 +29,17 @@ public class ArenaModSystem : ModSystem
     public override void UpdateUI(GameTime gameTime)
     {
         _lastGameTime = gameTime;
-        if (BuilderInterface?.CurrentState != null)
+        if (_builderInterface?.CurrentState != null)
         {
-            BuilderInterface.Update(gameTime);
+            _builderInterface.Update(gameTime);
         }
 
         base.UpdateUI(gameTime);
+    }
+
+    public override void PostDrawTiles()
+    {
+        base.PostDrawTiles();
     }
 
     public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
@@ -44,9 +49,9 @@ public class ArenaModSystem : ModSystem
             "TerrariaRPG: Stats",
             delegate
             {
-                if (_lastGameTime != null && BuilderInterface?.CurrentState != null)
+                if (_lastGameTime != null && _builderInterface?.CurrentState != null)
                 {
-                    BuilderInterface.Draw(Main.spriteBatch, _lastGameTime);
+                    _builderInterface.Draw(Main.spriteBatch, _lastGameTime);
                 }
                 return true;
             },
@@ -56,18 +61,18 @@ public class ArenaModSystem : ModSystem
     
     internal void ToggleStatsUi()
     {
-        if(BuilderInterface.CurrentState == null)
+        if(_builderInterface.CurrentState == null)
         {
             //rPGPlayer.UIOpen = true; //TODO
             ModContent.GetInstance<ArenaPlayer>().IsUiOpen = true;
-            BuilderInterface?.SetState(_builderUi);
+            _builderInterface?.SetState(_builderUi);
             
         }
         else
         {
             //rPGPlayer.UIOpen = false;
             ModContent.GetInstance<ArenaPlayer>().IsUiOpen = false;
-            BuilderInterface?.SetState(null);
+            _builderInterface?.SetState(null);
         }
     }
 }

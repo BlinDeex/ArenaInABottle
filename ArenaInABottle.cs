@@ -14,6 +14,9 @@ namespace ArenaInABottle
 		{
 			if (Main.netMode != NetmodeID.Server)
 			{
+				Ref<Effect> fracRef = new(ModContent.Request<Effect>("ArenaInABottle/Content/Shaders/Frac", AssetRequestMode.ImmediateLoad).Value);
+				GameShaders.Misc["Frac"] = new MiscShaderData(fracRef, "Frac");
+				
 				Ref<Effect> perlinNoiseRef = new(ModContent.Request<Effect>("ArenaInABottle/Content/Shaders/PerlinNoise", AssetRequestMode.ImmediateLoad).Value);
 				GameShaders.Misc["PerlinNoise"] = new MiscShaderData(perlinNoiseRef, "NoisePass").UseImage1("Images/Misc/Perlin");
 			}

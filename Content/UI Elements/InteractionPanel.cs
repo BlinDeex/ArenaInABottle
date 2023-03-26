@@ -14,7 +14,7 @@ namespace ArenaInABottle.Content.UI_Elements;
 public class InteractionPanel : UIElement
 {
     private readonly Texture2D _mainTex = ModContent.Request<Texture2D>("ArenaInABottle/Content/Images/interactionPanel", AssetRequestMode.ImmediateLoad).Value;
-    private readonly Texture2D PerlinTexture = ModContent.Request<Texture2D>("ArenaInABottle/Content/Images/Shader/PerlinNoise", AssetRequestMode.ImmediateLoad).Value;
+    private readonly Texture2D _perlinTexture = ModContent.Request<Texture2D>("ArenaInABottle/Content/Images/Shader/PerlinNoise", AssetRequestMode.ImmediateLoad).Value;
     
     private static ArenaPlayer ArenaPlayer => Main.LocalPlayer.GetModPlayer<ArenaPlayer>();
     private Rectangle _size;
@@ -36,7 +36,7 @@ public class InteractionPanel : UIElement
         int height = (int)Math.Ceiling(dimensions.Height);
         _size = new Rectangle(point1.X, point1.Y, width, height);
         DrawBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
-        GameShaders.Misc["PerlinNoise"].Shader.Parameters["sampleTexture"].SetValue(PerlinTexture);
+        GameShaders.Misc["PerlinNoise"].Shader.Parameters["sampleTexture"].SetValue(_perlinTexture);
         GameShaders.Misc["PerlinNoise"].Shader.Parameters["noiseScalar"].SetValue(2.5f);
         GameShaders.Misc["PerlinNoise"].Apply();
         DrawBatch.Draw(_mainTex, _size, ArenaPlayer.UiColor.MultiplyRGB(_defaultColor));

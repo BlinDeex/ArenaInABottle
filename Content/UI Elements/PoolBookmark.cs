@@ -15,10 +15,10 @@ namespace ArenaInABottle.Content.UI_Elements;
 
 public class PoolBookmark : UIElement
 {
-    private readonly Texture2D BookmarkBase = ModContent.Request<Texture2D>("ArenaInABottle/Content/Images/BookmarkBase", AssetRequestMode.ImmediateLoad).Value;
-    private readonly Texture2D BookmarkFrame = ModContent.Request<Texture2D>("ArenaInABottle/Content/Images/BookmarkFrame", AssetRequestMode.ImmediateLoad).Value;
-    private readonly Texture2D BookmarkHighlight = ModContent.Request<Texture2D>("ArenaInABottle/Content/Images/BookmarkHighlight", AssetRequestMode.ImmediateLoad).Value;
-    private readonly Texture2D PerlinTexture = ModContent.Request<Texture2D>("ArenaInABottle/Content/Images/Shader/PerlinNoise", AssetRequestMode.ImmediateLoad).Value;
+    private readonly Texture2D _bookmarkBase = ModContent.Request<Texture2D>("ArenaInABottle/Content/Images/BookmarkBase", AssetRequestMode.ImmediateLoad).Value;
+    private readonly Texture2D _bookmarkFrame = ModContent.Request<Texture2D>("ArenaInABottle/Content/Images/BookmarkFrame", AssetRequestMode.ImmediateLoad).Value;
+    private readonly Texture2D _bookmarkHighlight = ModContent.Request<Texture2D>("ArenaInABottle/Content/Images/BookmarkHighlight", AssetRequestMode.ImmediateLoad).Value;
+    private readonly Texture2D _perlinTexture = ModContent.Request<Texture2D>("ArenaInABottle/Content/Images/Shader/PerlinNoise", AssetRequestMode.ImmediateLoad).Value;
     private static ArenaPlayer ArenaPlayer => Main.LocalPlayer.GetModPlayer<ArenaPlayer>();
     Rectangle _size, _boxSize;
     public bool Hovering = false;
@@ -62,13 +62,13 @@ public class PoolBookmark : UIElement
             spriteBatch.End();
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
             
-            GameShaders.Misc["PerlinNoise"].Shader.Parameters["sampleTexture"].SetValue(PerlinTexture); //TODO I doubt I need to set these every frame but crashing otherwise
+            GameShaders.Misc["PerlinNoise"].Shader.Parameters["sampleTexture"].SetValue(_perlinTexture); //TODO I doubt I need to set these every frame but crashing otherwise
             GameShaders.Misc["PerlinNoise"].Shader.Parameters["noiseScalar"].SetValue(5f); // higher = more compact tex on both x and y
             GameShaders.Misc["PerlinNoise"].Shader.Parameters["screenSize"].SetValue(_screenSize); // higher = more compact tex on both x and y
             GameShaders.Misc["PerlinNoise"].Apply();
             
-            spriteBatch.Draw(BookmarkBase, _size, _drawColor);
-            spriteBatch.Draw(BookmarkFrame, _size, _drawColor);
+            spriteBatch.Draw(_bookmarkBase, _size, _drawColor);
+            spriteBatch.Draw(_bookmarkFrame, _size, _drawColor);
 
             spriteBatch.End();
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
@@ -85,7 +85,7 @@ public class PoolBookmark : UIElement
             
             if (Hovering)
             {
-                spriteBatch.Draw(BookmarkHighlight, _size, Color.Lerp(_drawColor, Color.Black, (float)Math.Sin(Main.time / 10)));
+                spriteBatch.Draw(_bookmarkHighlight, _size, Color.Lerp(_drawColor, Color.Black, (float)Math.Sin(Main.time / 10)));
             }
         }
     

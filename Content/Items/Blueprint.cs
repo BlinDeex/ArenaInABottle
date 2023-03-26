@@ -1,3 +1,4 @@
+using ArenaInABottle.Content.Misc;
 using ArenaInABottle.Content.Projectiles;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -28,8 +29,6 @@ public class Blueprint : ModItem
         Item.useStyle = ItemUseStyleID.Shoot;
         Item.UseSound = SoundID.Item81;
         Item.consumable = true;
-        
-
     }
 
     public override bool CanUseItem(Player player)
@@ -40,14 +39,13 @@ public class Blueprint : ModItem
     public override void OnConsumeItem(Player player)
     {
         ArenaPlayer.BlueprintPlaced = true;
-        Main.NewText("consuming");
     }
 
     public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage,
         ref float knockback)
     {
-        position = Main.MouseWorld;
-        
+        position.X = Helpers.RoundDownToNearest(Main.MouseWorld.X, 16);
+        position.Y = Helpers.RoundDownToNearest(Main.MouseWorld.Y, 16);
         base.ModifyShootStats(player, ref position, ref velocity, ref type, ref damage, ref knockback);
     }
 }

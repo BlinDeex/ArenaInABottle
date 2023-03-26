@@ -12,15 +12,14 @@ public class ArenaPlayer : ModPlayer
 
     #region choosePhase
 
-    public Color UiColor = new Color(0, 115, 230);
+    public Color UiColor = new(0, 115, 230);
     
-    public int Width = 0, Height = 0, Floots = 0, SbSpacing = 0;
-    public string Theme = "None";
+    
     public string TextBox0 = "", TextBox1 = "", TextBox2 = "", TextBox3 = "", TextBox4 = "", TextBox5 = "";
-    public string[] TextBoxesExplained = { "", "", "", "", "", "" };
+    public readonly string[] TextBoxesExplained = { "", "", "", "", "", "" };
 
     public bool CheckBox1, CheckBox2, CheckBox3, CheckBox4, CheckBox5, CheckBox6;
-    public string[] CheckBoxesExplained = { "", "", "", "", "", "" };
+    public readonly string[] CheckBoxesExplained = { "", "", "", "", "", "" };
     public string CurrentTitle = "Arena Builder";
     public bool ItemLockedIn = false;
     public bool BlueprintPlaced { get; set; } = false;

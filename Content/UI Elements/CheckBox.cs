@@ -26,14 +26,14 @@ public class CheckBox : UIElement
     private ButtonState _oldMouseState;
     public int CheckBoxIndex { get; }
 
-    private bool mouseOver;
+    private bool _mouseOver;
     
     public bool IsActive { get; private set; }
     public bool IsLocked { get; set; }
     
     private readonly Color _hoveringColor = new(1f, 1f, 1f);
     private readonly Color _notHoveringColor = new(0.8f, 0.8f, 0.8f);
-    public string _drawStringExplain;
+    public string DrawStringExplain;
 
     public void DeactivateTextBox()
     {
@@ -67,7 +67,7 @@ public class CheckBox : UIElement
         int height = (int)Math.Ceiling(dimensions.Height);
         _size = new Rectangle(point1.X, point1.Y, width, height);
         _lockSize = new Rectangle(point1.X, point1.Y, width + 30, height);
-        spriteBatch.Draw(_checkBoxTex, _size, mouseOver ? ArenaPlayer.UiColor.MultiplyRGB(_hoveringColor) : ArenaPlayer.UiColor.MultiplyRGB(_notHoveringColor));
+        spriteBatch.Draw(_checkBoxTex, _size, _mouseOver ? ArenaPlayer.UiColor.MultiplyRGB(_hoveringColor) : ArenaPlayer.UiColor.MultiplyRGB(_notHoveringColor));
         if (CheckStatus())
         {
             spriteBatch.DrawString(Helpers.ProvideFont(Helpers.Fonts.ItemFont), "X", point1.ToVector2() + new Vector2(7, 4), Color.Black);
@@ -78,21 +78,21 @@ public class CheckBox : UIElement
             spriteBatch.Draw(_lock, _lockSize,null,Color.White,0,new Vector2(-8, 0),SpriteEffects.None,0);
         }
 
-        _drawStringExplain = CheckBoxCurrentExplain();
+        DrawStringExplain = CheckBoxCurrentExplain();
         
-        spriteBatch.DrawString(Helpers.ProvideFont(Helpers.Fonts.ItemFont), _drawStringExplain, point1.ToVector2() + new Vector2(42, 4), Color.Black);
+        spriteBatch.DrawString(Helpers.ProvideFont(Helpers.Fonts.ItemFont), DrawStringExplain, point1.ToVector2() + new Vector2(42, 4), Color.Black);
     }
 
     public override void Update(GameTime gameTime)
     {
         Rectangle dim = _size;
         MouseState mouse = Mouse.GetState();
-        mouseOver = mouse.X > dim.X && mouse.X < dim.X + dim.Width && mouse.Y > dim.Y &&
+        _mouseOver = mouse.X > dim.X && mouse.X < dim.X + dim.Width && mouse.Y > dim.Y &&
                          mouse.Y < dim.Y + dim.Height;
 
         if (mouse.LeftButton == ButtonState.Pressed && _oldMouseState == ButtonState.Released)
         {
-            if (mouseOver)
+            if (_mouseOver)
             {
                 if (!ArenaPlayer.ItemLockedIn)
                 {
