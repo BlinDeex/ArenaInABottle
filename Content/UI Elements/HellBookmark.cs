@@ -13,7 +13,7 @@ using Terraria.UI;
 
 namespace ArenaInABottle.Content.UI_Elements;
 
-public class HellBookmark : BookmarkBase
+public sealed class HellBookmark : BookmarkBase
 {
     public HellBookmark()
     {
@@ -30,42 +30,10 @@ public class HellBookmark : BookmarkBase
         DrawColor = new Color(0.9f, 0.45f, 0.1f);
     }
 
-    public sealed override string BookmarkName { get; set; }
-    protected sealed override string BookmarkTitle { get; set; }
-    protected sealed override (int, string)[] TextBoxesNeeded { get; set; }
-    protected sealed override (int, string)[] CheckBoxesNeeded { get; set; }
-    protected sealed override Color DrawColor { get; set; }
-    
-    protected override void DrawSelf(SpriteBatch spriteBatch)
-    {
-            base.DrawSelf(spriteBatch);
-            
-            spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
-            
-            GameShaders.Misc["PerlinNoise"].Shader.Parameters["sampleTexture"].SetValue(PerlinTexture); //TODO I doubt I need to set these every frame but crashing otherwise
-            GameShaders.Misc["PerlinNoise"].Shader.Parameters["noiseScalar"].SetValue(5f); // higher = more compact tex on both x and y
-            GameShaders.Misc["PerlinNoise"].Apply();
-            
-            spriteBatch.Draw(BookmarkSquare, Size, DrawColor);
-            spriteBatch.Draw(BookmarkFrame, Size, DrawColor);
+    protected override string BookmarkName { get; set; }
+    protected override string BookmarkTitle { get; set; }
+    protected override (int, string)[] TextBoxesNeeded { get; set; }
+    protected override (int, string)[] CheckBoxesNeeded { get; set; }
+    protected override Color DrawColor { get; set; }
 
-            spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
-            
-            //GameShaders.Misc["Frac"].Apply();
-            
-            spriteBatch.DrawString(Helpers.ProvideFont(Helpers.Fonts.ItemFont), BookmarkName, Point1.ToVector2() + new Vector2(176, 7), DrawColor, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
-            
-            spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, DepthStencilState.None, Main.graphics.GraphicsDevice.RasterizerState, null, Main.GameViewMatrix.TransformationMatrix);
-            //Main.instance.LoadItem(ItemID.WaterBolt);
-            //Texture2D sword = TextureAssets.Item[ItemID.WaterBolt].Value;
-            //spriteBatch.Draw(sword, boxSize, Color.White);
-            
-            if (Hovering)
-            {
-                spriteBatch.Draw(BookmarkHighlight, Size, Color.Lerp(DrawColor, Color.Black, (float)Math.Sin(Main.time / 10)));
-            }
-    }
 }

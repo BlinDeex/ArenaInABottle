@@ -13,7 +13,7 @@ using Terraria.UI;
 
 namespace ArenaInABottle.Content.UI_Elements;
 
-public sealed class PoolBookmark : BookmarkBase
+public sealed class CustomBookmark : BookmarkBase
 {
     protected override string BookmarkName { get; set; }
     protected override string BookmarkTitle { get; set; }
@@ -21,18 +21,19 @@ public sealed class PoolBookmark : BookmarkBase
     protected override (int, string)[] CheckBoxesNeeded { get; set; }
     protected override Color DrawColor { get; set; }
 
-    public PoolBookmark()
+    public CustomBookmark()
     {
         Width.Set(260, 0);
         Height.Set(32, 0);
         VAlign = 0.5f;
         HAlign = 0.5f;
         Left.Set(14, 0);
-        Top.Set(-117, 0);
-        BookmarkName = "Pool";
-        BookmarkTitle = "Pool Builder";
-        TextBoxesNeeded = new[]{ (0, "Width")};
-        CheckBoxesNeeded = new[] { (0, "Water"), (1, "Lava"), (2, "Honey")};
-        DrawColor = new Color(0.2f, 0.2f, 0.8f);
+        Top.Set(93, 0);
+        BookmarkName = "Custom";
+        BookmarkTitle = "Custom Builder";
+        TextBoxesNeeded = new[]{ (0, "Width"),(1,"Height"),(2,"Floors"),(3,"Solid block spacing")};
+        CheckBoxesNeeded = new[] { (0, "Place campfires"), (1, "Place heart lanterns"), (2, "Clear area") };
+        DrawColor = Main.DiscoColor;
+        Custom = true;
     }
 }

@@ -37,11 +37,6 @@ public class ArenaModSystem : ModSystem
         base.UpdateUI(gameTime);
     }
 
-    public override void PostDrawTiles()
-    {
-        base.PostDrawTiles();
-    }
-
     public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
     {
         int mouseTextIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Mouse Text"));

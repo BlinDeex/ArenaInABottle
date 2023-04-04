@@ -1,5 +1,8 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
+using System.Net;
+using ArenaInABottle.Content.Items;
 using ArenaInABottle.Content.Misc;
 using ArenaInABottle.Content.UI_Elements;
 using Microsoft.Xna.Framework;
@@ -27,14 +30,19 @@ public class BuilderUi : UIState
     private ArenaBookmark _arenaBookmark;
     private PoolBookmark _poolBookmark;
     private HellBookmark _hellBookmark;
+    private CustomBookmark _customBookmark;
     private readonly TextBox _textBox1 = new(0), _textBox2 = new(1),_textBox3 = new(2), _textBox4 = new(3),_textBox5 = new(4), _textBox6 = new(5);
     private readonly CheckBox _checkBox0 = new(0), _checkBox1 = new(1),_checkBox2 = new(2), _checkBox3 = new(3),_checkBox4 = new(4), _checkBox5 = new(5);
     public TitleString Title = new();
     public List<TextBox> TextBoxes;
     public List<CheckBox> CheckBoxes;
+
+    private RequirementsFrame _requirementsFrame;
+    
     private ArenaPlayer ArenaPlayer => Main.LocalPlayer.GetModPlayer<ArenaPlayer>();
 
     private Vector2 _masterPanelOffset;
+    
     public override void OnInitialize()
     {
         Instance = this;
@@ -94,7 +102,7 @@ public class BuilderUi : UIState
 
         foreach (int extraCheckBox in totalCheckBoxes)
         {
-            CheckBoxes[extraCheckBox].DeactivateTextBox();
+            CheckBoxes[extraCheckBox].DeactivateCheckBox();
         }
 
         ArenaPlayer.CurrentTitle = title;
@@ -115,6 +123,13 @@ public class BuilderUi : UIState
         AppendTextBoxes(_masterInteractionPanel);
         AppendCheckBoxes(_masterInteractionPanel);
         AppendTitle(_masterInteractionPanel);
+        AppendRequirementsList(_masterInteractionPanel);
+    }
+
+    private void AppendRequirementsList(UIElement parentPanel)
+    {
+        _requirementsFrame = new RequirementsFrame();
+        parentPanel.Append(_requirementsFrame);
     }
 
     private void AppendTitle(UIElement parentPanel)
@@ -166,6 +181,34 @@ public class BuilderUi : UIState
         else if (listeningelement == _textBox6)
         {
             _textBox6.Hovering = false;
+        }
+    }
+
+    void AssembleRequirements(StructuralBottle item)
+    {
+        TileInfo[] tiles = item.AreaCopied;
+
+        ushort[] distinctTiles = tiles.Select(x => x.TileType).Distinct().ToArray();
+        ushort[] distinctWalls = tiles.Select(x => x.WallType).Distinct().ToArray();
+
+        Dictionary<ushort, int> requiredTiles = distinctTiles.ToDictionary(type => type, _ => 0);
+        Dictionary<ushort, int> requiredWalls = distinctWalls.ToDictionary(type => type, _ => 0);
+        Main.NewText($"Tile types: {requiredTiles.Keys.Count} Wall types: {requiredWalls.Keys.Count}");
+        foreach (TileInfo tile in tiles)
+        {
+            ushort tileType = tile.TileType;
+            
+            if (tileType != ushort.MaxValue)
+            {
+                requiredTiles[tileType]++;
+            }
+
+            ushort wallType = tile.WallType;
+            
+            if (wallType != ushort.MaxValue)
+            {
+                requiredWalls[wallType]++;
+            }
         }
     }
 
@@ -225,6 +268,9 @@ public class BuilderUi : UIState
         
         _hellBookmark = new HellBookmark();
         parentPanel.Append(_hellBookmark);
+        
+        _customBookmark = new CustomBookmark();
+        parentPanel.Append(_customBookmark);
     }
     
     private void GalaxySlot(UIElement mainPanel)

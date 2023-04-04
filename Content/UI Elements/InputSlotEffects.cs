@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using ArenaInABottle.Content.Misc;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,7 +14,7 @@ using Terraria.UI;
 namespace ArenaInABottle.Content.UI_Elements
 {
     
-    internal class GalaxySlotEffects : UIElement
+    internal class InputSlotEffects : UIElement
     {
         private Texture2D _dotRing = ModContent.Request<Texture2D>("ArenaInABottle/Content/Images/DotRing", AssetRequestMode.ImmediateLoad).Value;
         private Texture2D _itemSlotBorder = ModContent.Request<Texture2D>("ArenaInABottle/Content/Images/ItemSlotUpdated", AssetRequestMode.ImmediateLoad).Value;
@@ -62,7 +63,9 @@ namespace ArenaInABottle.Content.UI_Elements
 
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
-
+            SpriteBatch backup = Main.spriteBatch;
+            
+            
             DimensionsCalc();
             ItemOutputSlotDoorsOffsetCalc();
             NoiseCalcs();
@@ -74,14 +77,13 @@ namespace ArenaInABottle.Content.UI_Elements
             
             
             spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, DepthStencilState.None, Main.Rasterizer, null, Main.UIScaleMatrix);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
             
             spriteBatch.Draw(_itemSlotBorder, _size,
                 ModArenaPlayer.ItemInSlot.type != ItemID.None ? ArenaPlayer.UiColor.MultiplyRGB(_hoveringColor) : ArenaPlayer.UiColor.MultiplyRGB(_notHoveringColor));
             
             spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
-            
+            backup.Begin();
         }
 
         private void DimensionsCalc()
@@ -153,47 +155,9 @@ namespace ArenaInABottle.Content.UI_Elements
             rectangle2.Size() / 2, 1, SpriteEffects.None, 0);
         }
 
-        public override void Click(UIMouseEvent evt) //TODO wtf is this shit why it only works exactly like this
+        public override void Click(UIMouseEvent evt)
         {
-            ArenaPlayer modArenaPlayer = Main.LocalPlayer.GetModPlayer<ArenaPlayer>();
-
-            Item itemSlot = modArenaPlayer.ItemInSlot;
-            Item itemOnMouse = Main.LocalPlayer.HeldItem;
-
-            switch (itemSlot.IsAir)
-            {
-                //if (Main.dedServ) return;
-                // both item slot and mouse has items which are of same type and mouse item is not at max stack
-                case false when !itemOnMouse.IsAir && itemSlot.type == itemOnMouse.type && itemOnMouse.maxStack > itemOnMouse.stack:
-                    modArenaPlayer.ItemInSlot = new Item(ItemID.None);
-                    Main.LocalPlayer.HeldItem.stack++;
-                    return;
-                // item slot has item and mouse item doesnt
-                case false when itemOnMouse.IsAir:
-                {
-                    Item tempItem = modArenaPlayer.ItemInSlot.Clone();
-                    modArenaPlayer.ItemInSlot.TurnToAir();
-                    Main.mouseItem = tempItem;
-                    return;
-                }
-                // item slot doesnt have item and mouse does
-                case true when !Main.LocalPlayer.HeldItem.IsAir:
-                {
-                    if (Main.LocalPlayer.HeldItem.stack > 1)
-                    {
-                        modArenaPlayer.ItemInSlot = new Item(Main.LocalPlayer.HeldItem.type);
-                        Main.LocalPlayer.HeldItem.stack -= 1; // wont reduce
-                    }
-                    else
-                    {
-                        Item tempItem = Main.LocalPlayer.HeldItem.Clone();
-                        Main.LocalPlayer.HeldItem.TurnToAir();
-                        modArenaPlayer.ItemInSlot = tempItem;
-                    }
-
-                    break;
-                }
-            }
+            //TODO implement
         }
         
         

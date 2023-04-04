@@ -1,6 +1,8 @@
 using System.Diagnostics;
+using ArenaInABottle.Content.Items;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.GameContent.UI.Elements;
 using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -29,6 +31,9 @@ public class ArenaPlayer : ModPlayer
     public Item ItemInSlot = new(ItemID.None);
     public bool IsUiOpen = false;
 
+    public bool ReverseCapsulePlacement;
+
+    public bool CreativeMode;
 
     public override void ProcessTriggers(TriggersSet triggersSet)
     {
@@ -36,6 +41,12 @@ public class ArenaPlayer : ModPlayer
         {
             ArenaModSystem.Instance.ToggleStatsUi();
             
+        }
+
+        if (Keybinds.StructuralCapsuleReversal.JustPressed &&
+            Player.HeldItem.type == ModContent.ItemType<StructuralBottle>())
+        {
+            ReverseCapsulePlacement = true;
         }
     }
 
@@ -45,6 +56,9 @@ public class ArenaPlayer : ModPlayer
         {
             Main.dayTime = true;
         }
+
+        Main.time = 50000;
+        
         
         Player.delayUseItem = IsUiOpen;
         base.PreUpdate();

@@ -18,7 +18,6 @@ public class InteractionPanel : UIElement
     
     private static ArenaPlayer ArenaPlayer => Main.LocalPlayer.GetModPlayer<ArenaPlayer>();
     private Rectangle _size;
-    private static readonly SpriteBatch DrawBatch = new(Main.graphics.GraphicsDevice);
     private readonly Color _defaultColor = new(0.9f, 0.9f, 0.9f);
 
     public override void OnActivate()
@@ -35,12 +34,14 @@ public class InteractionPanel : UIElement
         int width = (int)Math.Ceiling(dimensions.Width);
         int height = (int)Math.Ceiling(dimensions.Height);
         _size = new Rectangle(point1.X, point1.Y, width, height);
-        DrawBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+        spriteBatch.End();
+        spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, DepthStencilState.None, Main.graphics.GraphicsDevice.RasterizerState, null, Main.UIScaleMatrix);
         GameShaders.Misc["PerlinNoise"].Shader.Parameters["sampleTexture"].SetValue(_perlinTexture);
         GameShaders.Misc["PerlinNoise"].Shader.Parameters["noiseScalar"].SetValue(2.5f);
         GameShaders.Misc["PerlinNoise"].Apply();
-        DrawBatch.Draw(_mainTex, _size, ArenaPlayer.UiColor.MultiplyRGB(_defaultColor));
-        DrawBatch.End();
-
+        spriteBatch.Draw(_mainTex, _size, ArenaPlayer.UiColor.MultiplyRGB(_defaultColor));
+        spriteBatch.End();
+        Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+        
     }
 }

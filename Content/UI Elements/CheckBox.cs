@@ -35,7 +35,7 @@ public class CheckBox : UIElement
     private readonly Color _notHoveringColor = new(0.8f, 0.8f, 0.8f);
     public string DrawStringExplain;
 
-    public void DeactivateTextBox()
+    public void DeactivateCheckBox()
     {
         Remove();
         IsActive = false;

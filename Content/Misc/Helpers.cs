@@ -1,4 +1,5 @@
 using System;
+using ArenaInABottle.Content.Items;
 using Microsoft.Xna.Framework.Input;
 using ReLogic.Content;
 using ReLogic.Graphics;
@@ -17,6 +18,7 @@ public static class Helpers
     private static readonly DynamicSpriteFont ItemFont = ItemFontAsset.Value;
     private static readonly DynamicSpriteFont MouseFont = MouseFontAsset.Value;
     private static readonly DynamicSpriteFont CombatFont0 = CombatFontAsset.Value;
+    
 
     public enum Fonts
     {
